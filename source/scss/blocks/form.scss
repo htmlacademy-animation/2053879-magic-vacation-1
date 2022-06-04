@@ -43,6 +43,10 @@
   border: 0;
   border-radius: 3rem;
   outline: none;
+  transform: scaleX(0);
+  transition-property: transform;
+  transition-duration: 0.4s;
+  transform-origin: 100% 50%;
 
   &:focus {
     border: 1px solid $c-purple;
@@ -145,4 +149,8 @@
       width: calc(100% - 5rem);
     }
   }
+}
+
+.screen.active .form__field {
+  transform: scaleX(1);
 }
