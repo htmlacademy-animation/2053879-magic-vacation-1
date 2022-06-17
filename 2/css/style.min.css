@@ -2142,6 +2142,7 @@ body.loaded .page-header__toggler {
   color: #ffffff;
   opacity: 0;
   transform: translate(0, 5px);
+  transition-delay: 0.1s;
   transition-duration: 0.5s;
   transition-timing-function: cubic-bezier(0.5, 0.9, 0.5, 0.9);
 }
@@ -2242,6 +2243,7 @@ body.loaded .page-header__toggler {
   }
 }
 body.loaded .page-header__menu a.active::after {
+  transition-delay: 0.2s;
   width: 100%;
 }
 .page-header__menu a:hover, .page-header__menu a:focus {
