@@ -196,6 +196,7 @@
   color: $c-light;
   opacity: 0;
   transform: translate(0, 5px);
+  transition-delay: .1s;
   transition-duration: .5s;
   transition-timing-function: cubic-bezier(.5,.90,.5,.90);
 
@@ -290,6 +291,7 @@
 
     body.loaded &.active {
       &::after {
+        transition-delay: .2s;
         width: 100%;
       }
     }
