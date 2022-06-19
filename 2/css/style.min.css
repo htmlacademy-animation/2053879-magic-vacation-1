@@ -2225,7 +2225,7 @@ body.loaded .page-header__toggler {
   width: 0;
   height: 2px;
   background-color: #ffffff;
-  left: 0;
+  right: 0;
   transition-duration: 0.4s;
 }
 @media (max-width: 1024px) and (orientation: portrait) {
@@ -2243,8 +2243,10 @@ body.loaded .page-header__toggler {
   }
 }
 body.loaded .page-header__menu a.active::after {
-  transition-delay: 0.2s;
+  transition-delay: 0.2s, 0;
+  transition-property: width, background-color;
   width: 100%;
+  left: 0;
 }
 .page-header__menu a:hover, .page-header__menu a:focus {
   color: #a67ee5;
@@ -2255,6 +2257,7 @@ body.loaded .page-header__menu a.active::after {
   opacity: 1;
   width: 100%;
   background-color: #a67ee5;
+  left: 0;
 }
 body.loaded .page-header__menu {
   opacity: 1;
