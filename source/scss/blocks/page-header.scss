@@ -273,7 +273,7 @@
       width: 0;
       height: 2px;
       background-color: $c-light;
-      left: 0;
+      right: 0;
       transition-duration: 0.4s;
 
       @media (max-width: $tablet) and (orientation: portrait) {
@@ -291,9 +291,17 @@
 
     body.loaded &.active {
       &::after {
-        transition-delay: .2s;
+        transition-delay: 0.2s, 0;
+        transition-property: width, background-color;
         width: 100%;
+        left: 0;
       }
+
+      // &:hover {
+      //   &::after {
+      //     transition-delay: 0s;
+      //   }
+      // }
     }
 
     &:hover,
@@ -306,6 +314,7 @@
         opacity: 1;
         width: 100%;
         background-color: $c-purple;
+        left: 0;
       }
     }
   }
