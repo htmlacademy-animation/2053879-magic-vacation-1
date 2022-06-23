@@ -4211,7 +4211,7 @@ body.loaded .social-block__toggler::before {
     z-index: -1;
   }
 }
-.screen--prizes.active ~ .animation_layout {
+.screen--prizes.animation-in-progress ~ .animation_layout {
   animation-name: show;
   animation-duration: 1s;
   animation-fill-mode: forwards;
