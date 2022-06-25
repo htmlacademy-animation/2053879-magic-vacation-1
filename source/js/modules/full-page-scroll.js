@@ -5,6 +5,7 @@ export default class FullPageScroll {
     this.THROTTLE_TIMEOUT = 1000;
     this.scrollFlag = true;
     this.timeout = null;
+    this.animationTimeout = null;
 
     this.screenElements = document.querySelectorAll(
       `.screen:not(.screen--result)`
@@ -16,6 +17,9 @@ export default class FullPageScroll {
     this.activeScreen = 0;
     this.onScrollHandler = this.onScroll.bind(this);
     this.onUrlHashChengedHandler = this.onUrlHashChanged.bind(this);
+
+    // Будем отслеживать историю смены хешей для анимации
+    this.hashHistory = [];
   }
 
   init() {
@@ -50,7 +54,23 @@ export default class FullPageScroll {
     const newIndex = Array.from(this.screenElements).findIndex(
       (screen) => location.hash.slice(1) === screen.id
     );
+
+    if (newIndex === this.activeScreen) {
+      return;
+    }
+
+    const prevElementClassList =
+      this.screenElements[this.activeScreen].classList;
+
+    // Если у предыдущего элемента остался класс animation-in-progress,
+    // значит анимация не успела отработать, поэтому уберем его
+    if (prevElementClassList.contains(`animation-in-progress`)) {
+      prevElementClassList.remove(`animation-in-progress`);
+    }
+
+    this.hashHistory.push(this.screenElements[this.activeScreen].id);
     this.activeScreen = newIndex < 0 ? 0 : newIndex;
+
     this.changePageDisplay();
   }
 
@@ -61,14 +81,53 @@ export default class FullPageScroll {
   }
 
   changeVisibilityDisplay() {
+    if (this.animationTimeout) {
+      window.clearTimeout(this.animationTimeout);
+    }
+
+    const prevHash = this.hashHistory[this.hashHistory.length - 1];
+
+    if (
+      this.screenElements[this.activeScreen].id === `prizes` &&
+      prevHash === `story`
+    ) {
+      // Добавим сразу класс active, чтобы запустить анимацию
+      this.screenElements[this.activeScreen].classList.add(
+        `animation-in-progress`
+      );
+
+      // Запустим таймер, чтобы сначала отработала анимация для показывания блока,
+      // а затем уже поменяем контент страницы
+      this.animationTimeout = window.setTimeout(() => {
+        this.screenElements.forEach((screen) => {
+          screen.classList.add(`screen--hidden`);
+          screen.classList.remove(`active`);
+        });
+
+        this.screenElements[this.activeScreen].classList.remove(
+          `screen--hidden`
+        );
+
+        this.screenElements[this.activeScreen].classList.remove(
+          `animation-in-progress`
+        );
+      }, 1000);
+
+      return;
+    }
+
     this.screenElements.forEach((screen) => {
       screen.classList.add(`screen--hidden`);
       screen.classList.remove(`active`);
     });
+
     this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
-    setTimeout(() => {
-      this.screenElements[this.activeScreen].classList.add(`active`);
-    }, 100);
+
+    if (this) {
+      setTimeout(() => {
+        this.screenElements[this.activeScreen].classList.add(`active`);
+      }, 100);
+    }
   }
 
   changeActiveMenuItem() {

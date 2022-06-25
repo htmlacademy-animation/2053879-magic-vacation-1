@@ -1,0 +1,30 @@
+@keyframes show {
+  0% {
+    top: 100%;
+    z-index: 9;
+  }
+
+  99.9% {
+    top: 0;
+    z-index: 9;
+  }
+
+  100% {
+    z-index: -1;
+  }
+}
+
+.screen--prizes.animation-in-progress {
+  & ~ .animation_layout {
+    animation-name: show;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+  }
+}
+
+.animation_layout {
+  position: absolute;
+  background-color: $c-dark;
+  height: 100vh;
+  width: 100%;
+}

@@ -311,6 +311,8 @@
 }
 
 .screen--prizes {
+  transition-property: background-color;
+  transition-delay: 0.5s;
   background-color: $c-dark;
 }
 
