@@ -1,3 +1,125 @@
+@keyframes show-suitcase {
+  from {
+    opacity: 0;
+    transform: translateY(200px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes show-flamingo {
+  from {
+    opacity: 0;
+    transform: translate(0, 100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-27%, 15%);
+  }
+}
+
+@keyframes shake-flamingo {
+  from {
+    transform: translate(-27%, 15%);
+  }
+
+  to {
+    transform: translate(-27%, 20%);
+  }
+}
+
+@keyframes opacity {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rotate-green-leaf {
+  0% {
+    transform: translate(65%, 30%) rotate(-20deg);
+  }
+
+  20% {
+    transform: translate(65%, 30%) rotate(10deg);
+  }
+
+  40% {
+    transform: translate(65%, 30%) rotate(-5deg);
+  }
+
+  60% {
+    transform: translate(65%, 30%) rotate(5deg);
+  }
+
+  80% {
+    transform: translate(65%, 30%) rotate(-1deg);
+  }
+
+  100% {
+    transform: translate(65%, 30%) rotate(0);
+  }
+}
+
+@keyframes rotate-left-blue-leaf {
+  0% {
+    transform: translate(-75%, 20%) rotate(20deg);
+  }
+
+  20% {
+    transform: translate(-75%, 20%) rotate(-10deg);
+  }
+
+  40% {
+    transform: translate(-75%, 20%) rotate(5deg);
+  }
+
+  60% {
+    transform: translate(-75%, 20%) rotate(-5deg);
+  }
+
+  80% {
+    transform: translate(-75%, 20%) rotate(1deg);
+  }
+
+  100% {
+    transform: translate(-75%, 20%) rotate(0);
+  }
+}
+
+@keyframes rotate-right-blue-leaf {
+  0% {
+    transform: translate(70%, -16%) rotate(-20deg);
+  }
+
+  20% {
+    transform: translate(70%, -16%) rotate(10deg);
+  }
+
+  40% {
+    transform: translate(70%, -16%) rotate(-5deg);
+  }
+
+  60% {
+    transform: translate(70%, -16%) rotate(5deg);
+  }
+
+  80% {
+    transform: translate(70%, -16%) rotate(-1deg);
+  }
+
+  100% {
+    transform: translate(70%, -16%) rotate(0);
+  }
+}
+
 .result {
   flex-grow: 1;
   display: flex;
@@ -51,6 +173,74 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
+  }
+}
+
+.image {
+  position: absolute;
+
+  &.suitcase {
+    z-index: 3;
+    width: 500px;
+    height: 500px;
+
+    animation-name: show-suitcase;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &.flamingo {
+    z-index: 4;
+    width: 400px;
+    height: 400px;
+    transform: translate(-27%, 15%);
+
+    animation-name: show-flamingo, shake-flamingo;
+    animation-duration: 0.7s, 1s;
+    animation-delay: 0s, 0.7s;
+    animation-iteration-count: 1, infinite;
+    animation-direction: alternate;
+    animation-direction: alternate;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out, linear;
+  }
+
+  &.leaf-green {
+    z-index: 2;
+    width: 400px;
+    height: 200px;
+    transform-origin: 0;
+
+    animation-name: opacity, rotate-green-leaf;
+  }
+
+  &.leaf-blue-left {
+    width: 350px;
+    height: 300px;
+    animation-name: opacity, rotate-left-blue-leaf;
+    transform: translate(-75%, 20%);
+    transform-origin: right;
+  }
+
+  &.leaf-blue-right {
+    width: 380px;
+    height: 360px;
+    animation-name: opacity, rotate-right-blue-leaf;
+    transform-origin: left;
+  }
+
+  &.leaf-blue-right,
+  &.leaf-blue-left {
+    z-index: 1;
+  }
+
+  &.leaf-blue-right,
+  &.leaf-blue-left,
+  &.leaf-green {
+    animation-duration: 1s, 3s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
   }
 }
 
