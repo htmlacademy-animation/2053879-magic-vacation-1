@@ -2862,6 +2862,50 @@ body.loaded .page-header__menu {
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }
+@media (max-width: 1024px) {
+  .image.flamingo {
+    width: 300px;
+    height: 300px;
+  }
+  .image.suitcase {
+    width: 400px;
+    height: 400px;
+  }
+  .image.leaf-green {
+    width: 300px;
+    height: 150px;
+  }
+  .image.leaf-blue-right {
+    width: 245px;
+    height: 230px;
+  }
+  .image.leaf-blue-left {
+    width: 250px;
+    height: 215px;
+  }
+}
+@media (max-width: 768px) {
+  .image.flamingo {
+    width: 200px;
+    height: 200px;
+  }
+  .image.suitcase {
+    width: 300px;
+    height: 300px;
+  }
+  .image.leaf-green {
+    width: 200px;
+    height: 100px;
+  }
+  .image.leaf-blue-right {
+    width: 200px;
+    height: 190px;
+  }
+  .image.leaf-blue-left {
+    width: 180px;
+    height: 170px;
+  }
+}
 
 .result__title {
   margin: 0 auto 2rem;
