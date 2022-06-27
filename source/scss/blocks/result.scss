@@ -242,6 +242,60 @@
     animation-fill-mode: forwards;
     animation-timing-function: ease-in-out;
   }
+
+  @media (max-width: $tablet) {
+    &.flamingo {
+      width: 300px;
+      height: 300px;
+    }
+
+    &.suitcase {
+      width: 400px;
+      height: 400px;
+    }
+
+    &.leaf-green {
+      width: 300px;
+      height: 150px;
+    }
+
+    &.leaf-blue-right {
+      width: 245px;
+      height: 230px;
+    }
+
+    &.leaf-blue-left {
+      width: 250px;
+      height: 215px;
+    }
+  }
+
+  @media (max-width: $mobile) {
+    &.flamingo {
+      width: 200px;
+      height: 200px;
+    }
+
+    &.suitcase {
+      width: 300px;
+      height: 300px;
+    }
+
+    &.leaf-green {
+      width: 200px;
+      height: 100px;
+    }
+
+    &.leaf-blue-right {
+      width: 200px;
+      height: 190px;
+    }
+
+    &.leaf-blue-left {
+      width: 180px;
+      height: 170px;
+    }
+  }
 }
 
 .result__title {
