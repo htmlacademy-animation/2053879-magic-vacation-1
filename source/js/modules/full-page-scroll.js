@@ -1,5 +1,7 @@
 import throttle from "lodash/throttle";
 
+import { animateLetters } from "../utils/animate-letters";
+
 export default class FullPageScroll {
   constructor() {
     this.THROTTLE_TIMEOUT = 1000;
@@ -30,6 +32,79 @@ export default class FullPageScroll {
     window.addEventListener(`popstate`, this.onUrlHashChengedHandler);
 
     this.onUrlHashChanged();
+
+    const currentId = this.screenElements[this.activeScreen].id;
+    console.log(currentId);
+    this.animatePageLetters(currentId);
+  }
+
+  animatePageLetters(id) {
+    if (!id || id === `top`) {
+      this.animateMainPage();
+    } else {
+      let node;
+
+      switch (id) {
+        case `story`: {
+          node = document.querySelector(`.slider__item-title`);
+          break;
+        }
+
+        case `rules`: {
+          node = document.querySelector(`.rules__title`);
+          break;
+        }
+
+        case `prizes`: {
+          node = document.querySelector(`.prizes__title`);
+          break;
+        }
+
+        case `game`: {
+          node = document.querySelector(`.game__title`);
+          break;
+        }
+      }
+
+      this.animatePageNode(node);
+    }
+  }
+
+  animatePageNode(node) {
+    if (!node) {
+      return;
+    }
+
+    animateLetters(node, {
+      "animation-timing-function": `ease-out`,
+      "animation-duration": `0.8s`,
+      "animation-fill-mode": `both`,
+    });
+  }
+
+  animateMainPage() {
+    const titleNode = document.querySelector(`.intro__title`);
+    const dateNode = document.querySelector(`.intro__date`);
+
+    if (titleNode) {
+      animateLetters(titleNode, {
+        "animation-timing-function": `ease-out`,
+        "animation-duration": `1s`,
+        "animation-fill-mode": `both`,
+      });
+    }
+
+    if (dateNode) {
+      animateLetters(
+        dateNode,
+        {
+          "animation-timing-function": `ease-out`,
+          "animation-duration": `1s`,
+          "animation-fill-mode": `both`,
+        },
+        { min: 1.5, max: 2 }
+      );
+    }
   }
 
   onScroll(evt) {
@@ -54,10 +129,6 @@ export default class FullPageScroll {
     const newIndex = Array.from(this.screenElements).findIndex(
       (screen) => location.hash.slice(1) === screen.id
     );
-
-    if (newIndex === this.activeScreen) {
-      return;
-    }
 
     const prevElementClassList =
       this.screenElements[this.activeScreen].classList;
@@ -86,11 +157,9 @@ export default class FullPageScroll {
     }
 
     const prevHash = this.hashHistory[this.hashHistory.length - 1];
+    const currentId = this.screenElements[this.activeScreen].id;
 
-    if (
-      this.screenElements[this.activeScreen].id === `prizes` &&
-      prevHash === `story`
-    ) {
+    if (currentId === `prizes` && prevHash === `story`) {
       // Добавим сразу класс active, чтобы запустить анимацию
       this.screenElements[this.activeScreen].classList.add(
         `animation-in-progress`
@@ -115,6 +184,8 @@ export default class FullPageScroll {
 
       return;
     }
+
+    this.animatePageLetters(currentId);
 
     this.screenElements.forEach((screen) => {
       screen.classList.add(`screen--hidden`);
