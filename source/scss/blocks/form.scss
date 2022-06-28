@@ -83,14 +83,14 @@
 }
 
 #email-field2 {
-  & > .form__button {
-    animation-name: show-button-opacity;
+  & + .form__button {
+    animation-name: opacity;
     animation-delay: 0.1s;
     animation-duration: 0.2s;
     animation-fill-mode: both;
 
     & > span {
-      animation-name: show-button-opacity;
+      animation-name: opacity;
       animation-delay: 0.4s;
       animation-duration: 0.2s;
       animation-fill-mode: both;
@@ -99,7 +99,7 @@
 }
 
 .form__button {
-  // flex-grow: 1;
+  flex-grow: 1;
 
   @media (orientation: portrait) {
     position: relative;
@@ -171,32 +171,16 @@
 
 .screen--show .form__field {
   animation-name: show-input;
-  animation-duration: 0.6s;
+  animation-duration: 1s;
   animation-fill-mode: forwards;
-  transform-origin: right;
-
-  @media (min-width: $stop-scaling) {
-    animation-name: show-input-stop-scaling;
-  }
-
-  @media (orientation: portrait) {
-    animation-name: show-input-mobile;
-  }
-
-  @media (max-width: $tablet) and (orientation: landscape) {
-    animation-name: show-input-tablet;
-  }
-
-  @media (max-width: $mobile) and (orientation: landscape) {
-    animation-name: show-input-mobile;
-  }
+  transform: scaleX(1);
 }
 
 .screen.active .form__field {
   transform: scaleX(1);
 }
 
-@keyframes show-button-opacity {
+@keyframes opacity {
   from {
     opacity: 0;
   }
@@ -208,56 +192,10 @@
 
 @keyframes show-input {
   from {
-    transform: scaleX(1);
-    margin-left: auto;
-    width: 10px;
+    clip-path: circle(5% at 96% 50%);
   }
 
   to {
-    transform: scaleX(1);
-    width: calc(100% - 310px);
-    margin-left: auto;
-  }
-}
-
-@keyframes show-input-stop-scaling {
-  from {
-    transform: scaleX(1);
-    margin-left: auto;
-    width: 10px;
-  }
-
-  to {
-    transform: scaleX(1);
-    width: calc(100% - 310px);
-    margin-left: auto;
-  }
-}
-
-@keyframes show-input-tablet {
-  from {
-    transform: scaleX(1);
-    margin-left: auto;
-    width: 10px;
-  }
-
-  to {
-    transform: scaleX(1);
-    width: calc(100% - 9rem);
-    margin-left: auto;
-  }
-}
-
-@keyframes show-input-mobile {
-  from {
-    transform: scaleX(1);
-    margin-left: auto;
-    width: 10px;
-  }
-
-  to {
-    transform: scaleX(1);
-    width: calc(100% - 5rem);
-    margin-left: auto;
+    clip-path: circle(100% at 50% 50%);
   }
 }
