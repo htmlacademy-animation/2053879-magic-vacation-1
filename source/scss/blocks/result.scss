@@ -32,16 +32,6 @@
   }
 }
 
-@keyframes opacity {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
 @keyframes rotate-green-leaf {
   0% {
     transform: translate(65%, 30%) rotate(-20deg);
