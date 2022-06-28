@@ -34,7 +34,7 @@ export default class FullPageScroll {
     this.onUrlHashChanged();
 
     const currentId = this.screenElements[this.activeScreen].id;
-    console.log(currentId);
+
     this.animatePageLetters(currentId);
   }
 
