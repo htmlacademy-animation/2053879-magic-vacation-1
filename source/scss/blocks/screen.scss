@@ -50,12 +50,40 @@
   transition-property: transform;
   transition-duration: 0.5s;
   transform: translate(0, 100%);
-  transition-timing-function: cubic-bezier(.5,.90,.5,.90);
+  transition-timing-function: cubic-bezier(0.5, 0.9, 0.5, 0.9);
+
+  &.screen__footer--full {
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      display: flex;
+      position: absolute;
+
+      animation-name: hide-pseudo-element;
+      animation-duration: 0.3s;
+      animation-delay: 0.2s;
+      animation-fill-mode: both;
+    }
+
+    &.hiding {
+      &::before {
+        animation-name: hide-pseudo-element-reverse;
+        animation-delay: 0s;
+      }
+    }
+  }
 
   @media (max-width: $tablet) and (orientation: portrait) {
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 0 3.6rem 0 0;
+
+    transition-property: width, height, border-radius;
+    transition-timing-function: ease-out;
+    transition-duration: 0.2s;
 
     &.screen__footer--full {
       width: 100%;
@@ -67,6 +95,9 @@
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 0 3.6rem 0 0;
+    transition-property: width, height, border-radius;
+    transition-timing-function: ease-out;
+    transition-duration: 0.2s;
 
     &.screen__footer--full {
       width: 100%;
@@ -299,7 +330,8 @@
 
 .screen--story {
   background-color: $c-dark;
-  background-image: url("../img/slide1.jpg"), url("../img/slide2.jpg"), url("../img/slide3.jpg"), url("../img/slide4.jpg");
+  background-image: url("../img/slide1.jpg"), url("../img/slide2.jpg"),
+    url("../img/slide3.jpg"), url("../img/slide4.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -314,6 +346,23 @@
   transition-property: background-color;
   transition-delay: 0.5s;
   background-color: $c-dark;
+
+  &.animating-text {
+    & .screen__footer-note {
+      animation-name: opacity;
+      animation-duration: 0.2s;
+      animation-direction: reverse;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  &.animating-text-reverse {
+    & .screen__footer-note {
+      animation-name: opacity;
+      animation-duration: 0.3s;
+      animation-fill-mode: forwards;
+    }
+  }
 }
 
 .screen--game {
@@ -364,4 +413,41 @@
 
 .screen--rules {
   background-color: $c-dark;
+
+  &.animating-text {
+    ul {
+      animation-name: opacity;
+      animation-duration: 0.3s;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  &.animating-text-reverse {
+    ul {
+      animation-name: opacity;
+      animation-duration: 0.2s;
+      animation-fill-mode: forwards;
+      animation-direction: reverse;
+    }
+  }
+}
+
+@keyframes hide-pseudo-element {
+  from {
+    background-color: #ffffff;
+  }
+
+  to {
+    background-color: transparent;
+  }
+}
+
+@keyframes hide-pseudo-element-reverse {
+  from {
+    background-color: transparent;
+  }
+
+  to {
+    background-color: #ffffff;
+  }
 }

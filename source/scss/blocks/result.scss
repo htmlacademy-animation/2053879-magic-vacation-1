@@ -350,6 +350,11 @@
   line-height: 1.2;
   color: $c-light;
 
+  animation-name: opacity;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-delay: 0.5s;
+
   @media (min-width: $stop-scaling) {
     margin: auto auto 10px;
     min-width: 340px;
@@ -381,6 +386,11 @@
     width: 4rem;
     height: 4rem;
     color: $c-dark;
+
+    animation-name: roll-from-right;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-delay: 0.5s;
 
     @media (min-width: $stop-scaling) {
       margin-left: 15px;

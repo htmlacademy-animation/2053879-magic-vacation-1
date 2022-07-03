@@ -66,6 +66,9 @@
   font-size: 2.4rem;
   line-height: 1.2;
 
+  transition-property: transform;
+  transition-duration: 1s;
+
   @media (min-width: $stop-scaling) {
     margin-bottom: 20px;
     font-size: 24px;
@@ -160,6 +163,20 @@
     height: 1rem;
     background-color: $c-light;
     border-radius: 50%;
+
+    animation-name: opacity;
+    animation-duration: 0.4s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate-reverse;
+    animation-fill-mode: backwards;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
 
     @media (min-width: $stop-scaling) {
       margin: 0 6.5px;

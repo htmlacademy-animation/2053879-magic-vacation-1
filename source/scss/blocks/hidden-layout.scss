@@ -14,7 +14,7 @@
   }
 }
 
-.screen--prizes.animation-in-progress {
+.screen--prizes.animating-block {
   & ~ .animation_layout {
     animation-name: show;
     animation-duration: 1s;
