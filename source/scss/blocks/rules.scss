@@ -183,7 +183,7 @@
 
   p {
     margin: 0;
-    animation-name: show-text, move-text;
+    animation-name: opacity, move-text;
     animation-duration: 0.5s;
     animation-fill-mode: both;
     animation-timing-function: ease-out;
@@ -235,7 +235,7 @@
     animation-delay: 1.2s;
 
     & > span {
-      animation-name: show-text;
+      animation-name: opacity;
       animation-delay: 2s;
       animation-duration: 0.3s;
       animation-fill-mode: both;
@@ -273,16 +273,6 @@
 
   to {
     transform: scale(1);
-  }
-}
-
-@keyframes show-text {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
   }
 }
 

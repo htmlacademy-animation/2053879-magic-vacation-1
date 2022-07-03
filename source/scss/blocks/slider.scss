@@ -175,6 +175,74 @@
   height: 4rem;
   color: $c-dark;
 
+  animation-duration: 0.4s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+  animation-delay: 1s;
+
+  transition-property: color;
+  transition-duration: 0.2s;
+
+  body.t-blue & {
+    color: $c-blue;
+
+    &:hover {
+      color: $c-light-blue;
+    }
+
+    &:focus {
+      color: $c-light-blue;
+
+      &::before {
+        border-color: $c-light-blue;
+      }
+    }
+
+    &:active,
+    &:active:focus {
+      color: $c-light;
+
+      &::before {
+        background-color: $c-light-blue;
+        border-color: $c-light-blue;
+      }
+    }
+  }
+
+  body.t-light-blue & {
+    color: $c-light-blue;
+
+    &:hover {
+      color: $c-blue;
+    }
+
+    &:focus {
+      color: $c-blue;
+
+      &::before {
+        border-color: $c-blue;
+      }
+    }
+
+    &:active,
+    &:active:focus {
+      color: $c-light;
+
+      &::before {
+        background-color: $c-blue;
+        border-color: $c-blue;
+      }
+    }
+  }
+
+  &--next {
+    animation-name: opacity, roll-from-right;
+  }
+
+  &--prev {
+    animation-name: opacity, roll-from-left;
+  }
+
   @media (min-width: $stop-scaling) {
     width: 40px;
     height: 40px;
@@ -189,6 +257,9 @@
     border: 2px solid $c-light;
     border-radius: 50%;
     z-index: -1;
+
+    transition-property: border, background-color, width, height;
+    transition-duration: 0.2s;
   }
 
   svg {
@@ -253,6 +324,11 @@
   font-size: 2.4rem;
   line-height: 4rem;
 
+  animation-name: opacity;
+  animation-delay: 1s;
+  animation-duration: 0.4s;
+  animation-fill-mode: both;
+
   @media (min-width: $stop-scaling) {
     bottom: 28px;
     width: 90px;
@@ -293,5 +369,15 @@
       height: 0.4rem;
       background-color: $c-light;
     }
+  }
+}
+
+@keyframes roll-from-left {
+  from {
+    transform: translateX(-100px) rotate(-360deg);
+  }
+
+  to {
+    transform: translateX(0) rotate(0);
   }
 }

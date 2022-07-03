@@ -2,6 +2,25 @@ import throttle from "lodash/throttle";
 
 import { animateLetters } from "../utils/animate-letters";
 
+const SCREEN_ID_BY_HASH = {
+  top: 0,
+  story: 1,
+  prizes: 2,
+  rules: 3,
+  game: 4,
+};
+
+const SHOW_HIDDEN_BLOCK_ANIMATION_NAME = `animating-block`;
+const SHOW_TEXT_WITH_OPACITY_ANIMATION_NAME = `animating-text`;
+const SHOW_TEXT_WITH_OPACITY_REVERSE_ANIMATION_NAME = `animating-text-reverse`;
+
+// Список анимации, которые применяются к страницам при переключении
+const ANIMATION_NAMES_ON_PAGE_CHANGING = [
+  SHOW_HIDDEN_BLOCK_ANIMATION_NAME,
+  SHOW_TEXT_WITH_OPACITY_ANIMATION_NAME,
+  SHOW_TEXT_WITH_OPACITY_REVERSE_ANIMATION_NAME,
+];
+
 export default class FullPageScroll {
   constructor() {
     this.THROTTLE_TIMEOUT = 1000;
@@ -12,9 +31,12 @@ export default class FullPageScroll {
     this.screenElements = document.querySelectorAll(
       `.screen:not(.screen--result)`
     );
+
     this.menuElements = document.querySelectorAll(
       `.page-header__menu .js-menu-link`
     );
+
+    this.animationLayout = document.querySelector(`.animation_layout`);
 
     this.activeScreen = 0;
     this.onScrollHandler = this.onScroll.bind(this);
@@ -29,13 +51,61 @@ export default class FullPageScroll {
       `wheel`,
       throttle(this.onScrollHandler, this.THROTTLE_TIMEOUT, { trailing: true })
     );
+
     window.addEventListener(`popstate`, this.onUrlHashChengedHandler);
 
     this.onUrlHashChanged();
 
-    const currentId = this.screenElements[this.activeScreen].id;
-    console.log(currentId);
+    const currentId = this.activeScreenEl.id;
+
     this.animatePageLetters(currentId);
+
+    this.addAnimationCancelSubscriptions();
+  }
+
+  // Если анимация была отменена, уберем все классы, которые
+  // запускают ее при смене страницы.
+  clearAnimatingClasses(event) {
+    const { currentTarget: target } = event;
+
+    if (!target) {
+      return;
+    }
+
+    target.classList.forEach((className) => {
+      if (ANIMATION_NAMES_ON_PAGE_CHANGING.includes(className)) {
+        target.classList.remove(className);
+      }
+    });
+  }
+
+  // Убирает классы с body, которые добавляюстся при смене слайдов истории
+  removeBodyThemeClasses() {
+    if (document.body.classList.contains(`t-light-blue`)) {
+      document.body.classList.remove(`t-light-blue`);
+    }
+
+    if (document.body.classList.contains(`t-blue`)) {
+      document.body.classList.remove(`t-blue`);
+    }
+  }
+
+  addAnimationCancelSubscriptions() {
+    this.screenElements.forEach((screen) => {
+      screen.addEventListener(`animationcancel`, this.clearAnimatingClasses);
+    });
+  }
+
+  getScreenIdByHash(hash) {
+    return SCREEN_ID_BY_HASH[hash] || 0;
+  }
+
+  get prevHash() {
+    return this.hashHistory[this.hashHistory.length - 1];
+  }
+
+  get activeScreenEl() {
+    return this.screenElements[this.activeScreen];
   }
 
   animatePageLetters(id) {
@@ -110,15 +180,20 @@ export default class FullPageScroll {
   onScroll(evt) {
     if (this.scrollFlag) {
       this.reCalculateActiveScreenPosition(evt.deltaY);
+
       const currentPosition = this.activeScreen;
+
       if (currentPosition !== this.activeScreen) {
         this.changePageDisplay();
       }
     }
+
     this.scrollFlag = false;
+
     if (this.timeout !== null) {
       clearTimeout(this.timeout);
     }
+
     this.timeout = setTimeout(() => {
       this.timeout = null;
       this.scrollFlag = true;
@@ -130,16 +205,7 @@ export default class FullPageScroll {
       (screen) => location.hash.slice(1) === screen.id
     );
 
-    const prevElementClassList =
-      this.screenElements[this.activeScreen].classList;
-
-    // Если у предыдущего элемента остался класс animation-in-progress,
-    // значит анимация не успела отработать, поэтому уберем его
-    if (prevElementClassList.contains(`animation-in-progress`)) {
-      prevElementClassList.remove(`animation-in-progress`);
-    }
-
-    this.hashHistory.push(this.screenElements[this.activeScreen].id);
+    this.hashHistory.push(this.activeScreenEl.id);
     this.activeScreen = newIndex < 0 ? 0 : newIndex;
 
     this.changePageDisplay();
@@ -151,60 +217,138 @@ export default class FullPageScroll {
     this.emitChangeDisplayEvent();
   }
 
+  madeAllScreensHidden() {
+    this.screenElements.forEach((screen) => {
+      screen.classList.add(`screen--hidden`);
+      screen.classList.remove(`active`);
+    });
+  }
+
+  removeClasses(screenId, ...classNames) {
+    classNames.forEach((className) =>
+      this.screenElements[screenId].classList.remove(className)
+    );
+  }
+
+  addClasses(screenId, ...classNames) {
+    classNames.forEach((className) =>
+      this.screenElements[screenId].classList.add(className)
+    );
+  }
+
+  // Показываем скрытый блок, который перекрывает контент
+  animateHiddenBlock() {
+    // Уберем анимирующий класс, если изменился экран во время анимации
+    const screenChanged = () => {
+      const prizesScreen =
+        this.screenElements[this.getScreenIdByHash(`prizes`)];
+
+      document.body.removeEventListener(`screenChanged`, screenChanged);
+
+      if (prizesScreen.classList.contains(SHOW_HIDDEN_BLOCK_ANIMATION_NAME)) {
+        prizesScreen.classList.remove(SHOW_HIDDEN_BLOCK_ANIMATION_NAME);
+      }
+    };
+
+    // Добавим сразу класс active, чтобы запустить анимацию
+    this.addClasses(this.activeScreen, SHOW_HIDDEN_BLOCK_ANIMATION_NAME);
+
+    const animationEnd = () => {
+      document.body.removeEventListener(`screenChanged`, screenChanged);
+      this.animationLayout.removeEventListener(`animationend`, animationEnd);
+
+      this.madeAllScreensHidden();
+
+      this.removeClasses(
+        this.activeScreen,
+        `screen--hidden`,
+        SHOW_HIDDEN_BLOCK_ANIMATION_NAME
+      );
+    };
+
+    // На старте анимации будем слушать screenChanged, если стриггерится
+    // значит анимация не успела отработать
+    const animationStart = () => {
+      document.body.addEventListener(`screenChanged`, screenChanged);
+    };
+
+    this.animationLayout.addEventListener(`animationend`, animationEnd);
+    this.animationLayout.addEventListener(`animationstart`, animationStart);
+  }
+
+  // Анимируем текст футера при помощи опасити
+  animateFooterText(animationName) {
+    const prevScreenId = SCREEN_ID_BY_HASH[this.prevHash];
+
+    // Добавим сразу класс active на страницу с которой уходит, чтобы запустить анимацию
+    this.addClasses(prevScreenId, animationName);
+
+    this.animationTimeout = window.setTimeout(() => {
+      this.madeAllScreensHidden();
+
+      this.removeClasses(this.activeScreen, `screen--hidden`);
+      this.removeClasses(prevScreenId, animationName);
+
+      this.addClasses(this.activeScreen, animationName, `active`);
+
+      const animationEnd = () => {
+        this.activeScreenEl.removeEventListener(`animationend`, animationEnd);
+
+        this.removeClasses(this.activeScreen, animationName);
+      };
+
+      this.activeScreenEl.addEventListener(`animationend`, animationEnd);
+    }, 500);
+  }
+
   changeVisibilityDisplay() {
     if (this.animationTimeout) {
       window.clearTimeout(this.animationTimeout);
     }
 
-    const prevHash = this.hashHistory[this.hashHistory.length - 1];
-    const currentId = this.screenElements[this.activeScreen].id;
+    const currentId = this.activeScreenEl.id;
 
-    if (currentId === `prizes` && prevHash === `story`) {
-      // Добавим сразу класс active, чтобы запустить анимацию
-      this.screenElements[this.activeScreen].classList.add(
-        `animation-in-progress`
-      );
+    if (this.prevHash === `story`) {
+      this.removeBodyThemeClasses();
+    }
 
-      // Запустим таймер, чтобы сначала отработала анимация для показывания блока,
-      // а затем уже поменяем контент страницы
-      this.animationTimeout = window.setTimeout(() => {
-        this.screenElements.forEach((screen) => {
-          screen.classList.add(`screen--hidden`);
-          screen.classList.remove(`active`);
-        });
+    // Перешли со страницы история на призы
+    if (currentId === `prizes` && this.prevHash === `story`) {
+      this.animateHiddenBlock();
 
-        this.screenElements[this.activeScreen].classList.remove(
-          `screen--hidden`
-        );
+      return;
+    }
 
-        this.screenElements[this.activeScreen].classList.remove(
-          `animation-in-progress`
-        );
-      }, 1000);
+    // Перешли со страницы правила на призы
+    if (currentId === `rules` && this.prevHash === `prizes`) {
+      this.animateFooterText(SHOW_TEXT_WITH_OPACITY_ANIMATION_NAME);
+
+      return;
+    }
+
+    // Перешли со страницы призы на правила
+    if (currentId === `prizes` && this.prevHash === `rules`) {
+      this.animateFooterText(SHOW_TEXT_WITH_OPACITY_REVERSE_ANIMATION_NAME);
 
       return;
     }
 
     this.animatePageLetters(currentId);
-
-    this.screenElements.forEach((screen) => {
-      screen.classList.add(`screen--hidden`);
-      screen.classList.remove(`active`);
-    });
-
-    this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
+    this.madeAllScreensHidden();
+    this.removeClasses(this.activeScreen, `screen--hidden`);
 
     if (this) {
       setTimeout(() => {
-        this.screenElements[this.activeScreen].classList.add(`active`);
+        this.addClasses(this.activeScreen, `active`);
       }, 100);
     }
   }
 
   changeActiveMenuItem() {
     const activeItem = Array.from(this.menuElements).find(
-      (item) => item.dataset.href === this.screenElements[this.activeScreen].id
+      (item) => item.dataset.href === this.activeScreenEl.id
     );
+
     if (activeItem) {
       this.menuElements.forEach((item) => item.classList.remove(`active`));
       activeItem.classList.add(`active`);
@@ -215,8 +359,8 @@ export default class FullPageScroll {
     const event = new CustomEvent(`screenChanged`, {
       detail: {
         screenId: this.activeScreen,
-        screenName: this.screenElements[this.activeScreen].id,
-        screenElement: this.screenElements[this.activeScreen],
+        screenName: this.activeScreenEl.id,
+        screenElement: this.activeScreenEl,
       },
     });
 

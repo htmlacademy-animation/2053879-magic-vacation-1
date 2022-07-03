@@ -82,6 +82,22 @@
   }
 }
 
+#email-field2 {
+  & + .form__button {
+    animation-name: opacity;
+    animation-delay: 0.1s;
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+
+    & > span {
+      animation-name: opacity;
+      animation-delay: 0.4s;
+      animation-duration: 0.2s;
+      animation-fill-mode: both;
+    }
+  }
+}
+
 .form__button {
   flex-grow: 1;
 
@@ -130,6 +146,8 @@
 }
 
 .form--result {
+  position: relative;
+
   .form__field {
     width: calc(100% - 31rem);
 
@@ -151,6 +169,23 @@
   }
 }
 
+.screen--show .form__field {
+  animation-name: show-input;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  transform: scaleX(1);
+}
+
 .screen.active .form__field {
   transform: scaleX(1);
+}
+
+@keyframes show-input {
+  from {
+    clip-path: circle(5% at 96% 50%);
+  }
+
+  to {
+    clip-path: circle(100% at 50% 50%);
+  }
 }

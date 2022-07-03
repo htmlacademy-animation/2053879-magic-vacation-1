@@ -37,7 +37,8 @@
     background-color: $c-light;
     border: 2px solid $c-light;
     z-index: -1;
-    transition-property: width, height, background-color, border-color, transform;
+    transition-property: width, height, background-color, border-color,
+      transform;
     transition-duration: 0.3s, 0.3s, 0.3s, 0.3s, 0.5s;
     transform: translate(-50%, -50%) scale(0);
     transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -89,6 +90,58 @@
   body.loaded & {
     &::before {
       transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  body.t-blue & {
+    color: $c-blue;
+
+    &:hover {
+      color: $c-light-blue;
+    }
+
+    &:focus {
+      color: $c-light-blue;
+
+      &::before {
+        border-color: $c-light-blue;
+      }
+    }
+
+    &:active,
+    &:active:focus {
+      color: $c-light;
+
+      &::before {
+        background-color: $c-light-blue;
+        border-color: $c-light-blue;
+      }
+    }
+  }
+
+  body.t-light-blue & {
+    color: $c-light-blue;
+
+    &:hover {
+      color: $c-blue;
+    }
+
+    &:focus {
+      color: $c-blue;
+
+      &::before {
+        border-color: $c-blue;
+      }
+    }
+
+    &:active,
+    &:active:focus {
+      color: $c-light;
+
+      &::before {
+        background-color: $c-blue;
+        border-color: $c-blue;
+      }
     }
   }
 }
@@ -218,6 +271,42 @@
     color: $c-purple;
     background-color: $c-light;
     border-color: $c-light;
+  }
+
+  body.t-blue & {
+    &:hover {
+      color: $c-light-blue;
+    }
+
+    &:focus {
+      color: $c-light-blue;
+      border-color: $c-light-blue;
+    }
+
+    &:active,
+    &:active:focus {
+      color: $c-light-blue;
+      background-color: $c-light;
+      border-color: $c-light;
+    }
+  }
+
+  body.t-light-blue & {
+    &:hover {
+      color: $c-blue;
+    }
+
+    &:focus {
+      color: $c-blue;
+      border-color: $c-blue;
+    }
+
+    &:active,
+    &:active:focus {
+      color: $c-blue;
+      background-color: $c-light;
+      border-color: $c-light;
+    }
   }
 
   svg {
